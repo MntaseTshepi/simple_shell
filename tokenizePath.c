@@ -16,6 +16,7 @@ char **tokenizePath()
 	if (value_cpy == NULL)
 	{
 		perror("sh: memory allocation failed");
+		free(value_cpy);
 		exit(EXIT_FAILURE);
 	}
 	tokens = strtok(value_cpy, delim);

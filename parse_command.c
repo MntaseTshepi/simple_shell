@@ -1,12 +1,10 @@
 #include "myshell.h"
-
 /**
  * parse_command - parse the command
  * @command: command parameter
  * @num_chars: number of characters parameter
  * Return: Parsed code
  */
-
 char **parse_command(char *command, ssize_t num_chars)
 {
 	int i = 0, num_token = 0;
@@ -15,9 +13,11 @@ char **parse_command(char *command, ssize_t num_chars)
 
 	command_cpy = malloc(num_chars);
 	if (command_cpy == NULL)
+	{
 		perror("sh: memory allocation failed");
 		free(command_cpy);
 		exit(EXIT_FAILURE);
+	}
 	_strcpy(command_cpy, command);
 	tokens = strtok(command, delim);
 	while (tokens != NULL)
@@ -25,12 +25,13 @@ char **parse_command(char *command, ssize_t num_chars)
 		num_token++;
 		tokens = strtok(NULL, delim);
 	}
-	num_token++;
 	argv = malloc(sizeof(char *) * num_token);
-	if (argv == NUL)
+	if (argv == NULL)
+	{
 		perror("tsh: memory allocation failed");
 		free(argv);
 		exit(EXIT_FAILURE);
+	}
 	tokens = strtok(command_cpy, delim);
 	for (i = 0; tokens != NULL; i++)
 	{
