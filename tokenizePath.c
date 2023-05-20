@@ -5,8 +5,8 @@
  */
 char **tokenizePath()
 {
-	char *variable = "PATH", *value = _getenv(variable), *tokens;
-	const char *delim = ":";
+	char *variable = "PATH", *value = _getenv(variable), *tok;
+	const char *del = ":";
 	int num_token = 0, i = 0;
 	char *value_cpy = NULL, *val_copy = NULL, **PATH;
 
@@ -17,7 +17,7 @@ char **tokenizePath()
 		free(value_cpy);
 		exit(EXIT_FAILURE);
 	}
-	for (tokens = strtok(value_cpy, delim); tokens != NULL; tokens = strtok(NULL, delim))
+	for (tok = strtok(value_cpy, del); tok != NULL; tok = strtok(NULL, del))
 	{
 		num_token++;
 	}
@@ -28,17 +28,17 @@ char **tokenizePath()
 		free(PATH);
 	}
 	val_copy = _strdup(value);
-	tokens = strtok(val_copy, delim);
-	for (i = 0; tokens != NULL; i++)
+	tok = strtok(val_copy, del);
+	for (i = 0; tok != NULL; i++)
 	{
-		PATH[i] = malloc(sizeof(char) * (_strlen(tokens) + 1));
+		PATH[i] = malloc(sizeof(char) * (_strlen(tok) + 1));
 		if (PATH[i] == NULL)
 		{
 			perror("sh: memory allocation failed");
 			free(PATH[i]);
 		}
-		_strcpy(PATH[i], tokens);
-		tokens = strtok(NULL, delim);
+		_strcpy(PATH[i], tok);
+		tok = strtok(NULL, del);
 	}
 	free(value_cpy);
 	value_cpy = NULL;
