@@ -1,10 +1,8 @@
 #include "myshell.h"
-
 /**
  * tokenizePath - Tokenizes each directory in the environment variable PATH
  * Return: Full path
  */
-
 char **tokenizePath()
 {
 	char *variable = "PATH", *value = _getenv(variable), *tokens;
@@ -19,19 +17,15 @@ char **tokenizePath()
 		free(value_cpy);
 		exit(EXIT_FAILURE);
 	}
-	tokens = strtok(value_cpy, delim);
-	while (tokens != NULL)
+	for (tokens = strtok(value_cpy, delim); tokens != NULL; tokens = strtok(NULL, delim))
 	{
 		num_token++;
-		tokens = strtok(NULL, delim);
 	}
-	num_token++;
 	PATH = malloc(sizeof(char *) * num_token);
 	if (PATH == NULL)
 	{
 		perror("sh: memory allocation failed");
 		free(PATH);
-		exit(EXIT_FAILURE);
 	}
 	val_copy = _strdup(value);
 	tokens = strtok(val_copy, delim);
@@ -42,7 +36,6 @@ char **tokenizePath()
 		{
 			perror("sh: memory allocation failed");
 			free(PATH[i]);
-			exit(EXIT_FAILURE);
 		}
 		_strcpy(PATH[i], tokens);
 		tokens = strtok(NULL, delim);
