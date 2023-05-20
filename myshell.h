@@ -10,10 +10,12 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 
+extern char **environ;
+
 void print_prompt(void);
 int main(int ac, char **argv);
 char **parse_command(char *command, ssize_t num_chars);
-char *getenv(const char *name);
+char *_getenv(const char *name);
 char **tokenizePath();
 char *actual_path(char *command);
 void execute_command(char **argv);
