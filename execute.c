@@ -137,4 +137,5 @@ void execute_binary_command(char *command, char **argv)
 			perror(command);
 		}
 	}
+	free(full_path);
 }
