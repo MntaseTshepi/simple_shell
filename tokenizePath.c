@@ -15,7 +15,6 @@ char **tokenizePath()
 	{
 		perror("sh: memory allocation failed");
 		free(value_cpy);
-		free(value);
 		exit(EXIT_FAILURE);
 	}
 	for (tok = strtok(value_cpy, del); tok != NULL; tok = strtok(NULL, del))
@@ -27,7 +26,6 @@ char **tokenizePath()
 	{
 		perror("sh: memory allocation failed");
 		free(PATH);
-		free(value_cpy);
 	}
 	val_copy = _strdup(value);
 	tok = strtok(val_copy, del);
