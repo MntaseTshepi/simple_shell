@@ -11,7 +11,7 @@ char **parse_command(char *command, ssize_t num_chars)
 	char **argv, *tokens, *command_cpy = NULL;
 	const char *delim = " \n";
 
-	command_cpy = malloc(num_chars);
+	command_cpy = malloc(num_chars + 1);
 	if (command_cpy == NULL)
 	{
 		perror("sh: memory allocation failed");
