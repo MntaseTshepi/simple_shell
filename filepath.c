@@ -21,6 +21,7 @@ char *actual_path(char *command)
 			{
 				perror("sh: memory allocation failed");
 				free(file_path);
+				free(path_tokens);
 				exit(EXIT_FAILURE);
 			}
 			_strcpy(file_path, path_tokens[i]);
@@ -35,7 +36,6 @@ char *actual_path(char *command)
 			else
 			{
 				free(file_path);
-				file_path = NULL;
 				i++;
 			}
 		}
