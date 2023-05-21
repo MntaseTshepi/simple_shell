@@ -112,7 +112,7 @@ void execute_binary_command(char *command, char **argv)
 
 	full_path = actual_path(command);
 
-	if (access(full_path, X_OK) != 0)
+	if (full_path == NULL || access(full_path, X_OK) != 0)
 	{
 		perror(command);
 		free(full_path);
@@ -122,12 +122,16 @@ void execute_binary_command(char *command, char **argv)
 	if (pid == -1)
 	{
 		perror(command);
+		free(full_path);
+		return;
 	}
 	else if ((pid == 0))
 	{
 		if (execve(full_path, argv, NULL) == -1)
 		{
 			perror(command);
+			free(full_path);
+			exit(EXIT_FAILURE);
 		}
 	}
 	else

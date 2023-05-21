@@ -20,30 +20,22 @@ char *actual_path(char *command)
 			if (file_path == NULL)
 			{
 				perror("sh: memory allocation failed");
-				free(file_path);
-				free(path_tokens);
-				exit(EXIT_FAILURE);
+				break;
 			}
 			_strcpy(file_path, path_tokens[i]);
 			_strcat(file_path, "/");
 			_strcat(file_path, command);
-			_strcat(file_path, "\0");
 			if (stat(file_path, &buffer) == 0)
-			{
-				free(path_tokens);
-				return (file_path);
-			}
-			else
-			{
-				free(file_path);
-				i++;
-			}
+				break;
+			free(file_path);
+			file_path = NULL;
+			i++;
 		}
 		free(path_tokens);
 	}
-	if (stat(command, &buffer) == 0)
+	if (file_path == NULL && stat(command, &buffer) == 0)
 	{
-		return (command);
+		file_path = _strdup(command);
 	}
-	return (NULL);
+	return (file_path);
 }

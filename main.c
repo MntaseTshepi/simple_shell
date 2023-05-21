@@ -29,6 +29,7 @@ int main(int ac, char **argv)
 		if (num_chars == -1)
 		{
 			write(STDOUT_FILENO, "exit\n", 6);
+			free(command);
 			_printexit();
 		}
 		argv = parse_command(command, num_chars);
