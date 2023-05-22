@@ -118,6 +118,7 @@ char *_strdup(const char *str)
 
 	if (s == NULL)
 	{
+		free(s);
 		return (NULL);
 	}
 	for (i = 0; i < count; i++)
