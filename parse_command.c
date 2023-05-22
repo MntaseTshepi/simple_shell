@@ -44,7 +44,7 @@ char **parse_command(char *command, ssize_t num_chars)
 		tokens = strtok(NULL, delim);
 	}
 	argv[i] = NULL;
-	free(command_cpy);
+	free(commad_cpy);
 	command_cpy = NULL;
 	return (argv);
 }
