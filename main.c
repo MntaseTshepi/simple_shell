@@ -30,7 +30,7 @@ int main(int ac, char **argv)
 		{
 			write(STDOUT_FILENO, "exit\n", 6);
 			free(command);
-			_printexit();
+			exit(0);
 		}
 		argv = parse_command(command, num_chars);
 		execute_command(argv);

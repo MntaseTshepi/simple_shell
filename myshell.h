@@ -23,12 +23,15 @@ void _printenviron(void);
 int is_builtin(char *command);
 void execute_builtin_command(char *command, char **argv);
 void execute_binary_command(char *command, char **argv);
-void _printexit(void);
+void _printexit(int status);
 int _strlen(const char *s);
 char *_strcpy(char *dest, const char *src);
 char *_strcat(char *dest, const char *src);
 int _strcmp(const char *s1, const char *s2);
 char *_strdup(const char *str);
 int _strncmp(const char *s1, const char *s2, size_t n);
+void unsetenv_function(char **argv);
+void setenv_function(char **argv);
+void cd_builtin(char **argv);
 
 #endif

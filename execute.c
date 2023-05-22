@@ -34,7 +34,8 @@ void execute_command(char **argv)
 
 int is_builtin(char *command)
 {
-	const char *builtins[] = {"printenv", "env", "exit", "echo"};
+	const char *builtins[] = {"printenv", "env", "exit", "echo",
+	"setenv", "unsetenv", "cd"};
 	size_t num_builtins, i;
 
 	num_builtins = sizeof(builtins) / sizeof(builtins[0]);
@@ -61,7 +62,8 @@ void _printenviron(void)
 
 	for (i = 0; env[i]; i++)
 	{
-		printf("%s\n", env[i]);
+		write(STDOUT_FILENO, env[i], _strlen(env[i]));
+		write(STDOUT_FILENO, "\n", 1);
 	}
 }
 
@@ -74,7 +76,7 @@ void _printenviron(void)
 
 void execute_builtin_command(char *command, char **argv)
 {
-	int i;
+	int i, status;
 	size_t len;
 
 	if (_strcmp(command, "env") == 0 || _strcmp(command, "printenv") == 0)
@@ -83,7 +85,15 @@ void execute_builtin_command(char *command, char **argv)
 	}
 	if (_strcmp(command, "exit") == 0)
 	{
-		_printexit();
+		status = atoi(argv[1]);
+		if (argv[1] != NULL)
+		{
+			_printexit(status);
+		}
+		else
+		{
+			_printexit(EXIT_FAILURE);
+		}
 	}
 	if (_strcmp(command, "echo") == 0)
 	{
@@ -95,6 +105,12 @@ void execute_builtin_command(char *command, char **argv)
 		}
 		write(STDOUT_FILENO, "\n", 1);
 	}
+	if (_strcmp(command, "setenv") == 0)
+		setenv_function(argv);
+	if (_strcmp(command, "unsetenv") == 0)
+		unsetenv_function(argv);
+	if (_strcmp(command, "cd") == 0)
+		cd_builtin(argv);
 }
 
 /**
@@ -143,3 +159,4 @@ void execute_binary_command(char *command, char **argv)
 	}
 	free(full_path);
 }
+
