@@ -20,9 +20,14 @@ void execute_command(char **argv)
 	{
 		execute_builtin_command(command, argv);
 	}
-	else
+	else if (is_builtin(command) == 0)
 	{
 		execute_binary_command(command, argv);
+	}
+	else
+	{
+		perror(command);
+		return;
 	}
 }
 
