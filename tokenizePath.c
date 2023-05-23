@@ -13,7 +13,6 @@ char **tokenizePath()
 	if (value_cpy == NULL)
 	{
 		perror("sh: memory allocation failed");
-		free(value_cpy);
 		exit(EXIT_FAILURE);
 	}
 	for (tok = strtok(value_cpy, del); tok != NULL; tok = strtok(NULL, del))
