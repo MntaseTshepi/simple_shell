@@ -3,11 +3,13 @@
 /**
  * _printexit - Function exits the shell.
  * @status: Exit status parameter
+ * @argv: Args parameter
  * Return: void
  */
 
-void _printexit(int status)
+void _printexit(int status, char **argv)
 {
+	status = atoi(argv[1]);
 	exit(status);
 }
 

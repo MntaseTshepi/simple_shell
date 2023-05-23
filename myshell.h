@@ -23,7 +23,7 @@ void _printenviron(void);
 int is_builtin(char *command);
 void execute_builtin_command(char *command, char **argv);
 void execute_binary_command(char *command, char **argv);
-void _printexit(int status);
+void _printexit(int status, char **argv);
 int _strlen(const char *s);
 char *_strcpy(char *dest, const char *src);
 char *_strcat(char *dest, const char *src);

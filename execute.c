@@ -76,7 +76,7 @@ void _printenviron(void)
 
 void execute_builtin_command(char *command, char **argv)
 {
-	int i, status;
+	int i, status = EXIT_SUCCESS;
 	size_t len;
 
 	if (_strcmp(command, "env") == 0 || _strcmp(command, "printenv") == 0)
@@ -85,14 +85,13 @@ void execute_builtin_command(char *command, char **argv)
 	}
 	if (_strcmp(command, "exit") == 0)
 	{
-		status = atoi(argv[1]);
 		if (argv[1] != NULL)
 		{
-			_printexit(status);
+			_printexit(status, argv);
 		}
 		else
 		{
-			_printexit(EXIT_FAILURE);
+			exit(0);
 		}
 	}
 	if (_strcmp(command, "echo") == 0)
