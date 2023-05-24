@@ -14,6 +14,7 @@ void execute_command(char **argv)
 
 	if (command == NULL)
 	{
+		perror("Command not found");
 		return;
 	}
 	if (is_builtin(command) == 1)
@@ -134,7 +135,7 @@ void execute_binary_command(char *command, char **argv)
 
 	if (full_path == NULL || access(full_path, X_OK) != 0)
 	{
-		perror(command);
+		perror("command not found");
 		free(full_path);
 		return;
 	}

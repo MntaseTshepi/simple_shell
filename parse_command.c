@@ -25,7 +25,7 @@ char **parse_command(char *command, ssize_t num_chars)
 		num_token++;
 		tokens = strtok(NULL, delim);
 	}
-	argv = malloc(sizeof(char *) * num_token);
+	argv = malloc(sizeof(char *) * (num_token + 1));
 	if (argv == NULL)
 	{
 		perror("tsh: memory allocation failed");
@@ -34,11 +34,11 @@ char **parse_command(char *command, ssize_t num_chars)
 	tokens = strtok(command_cpy, delim);
 	for (i = 0; tokens != NULL; i++)
 	{
-		argv[i] = malloc(sizeof(char) * _strlen(tokens) + 1);
+		argv[i] = malloc(sizeof(char) * (_strlen(tokens) + 1));
 		if (argv[i] == NULL)
 		{
 			perror("sh: memory allocation failed");
-			free(argv[i]);
+			free(argv);
 		}
 		_strcpy(argv[i], tokens);
 		tokens = strtok(NULL, delim);

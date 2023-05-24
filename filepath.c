@@ -7,8 +7,11 @@
 char *actual_path(char *command)
 {
 	struct stat buffer;
-	char **path_tokens = tokenizePath(), *file_path;
-	int i = 0, directory_length, command_length;
+	char **path_tokens = tokenizePath();
+	char *file_path = NULL;
+	int i = 0;
+	int directory_length;
+	int command_length;
 
 	command_length = _strlen(command);
 	if (path_tokens != NULL)

@@ -28,7 +28,6 @@ int main(int ac, char **argv)
 		num_chars = getline(&command, &command_size, stdin);
 		if (num_chars == -1)
 		{
-			write(STDOUT_FILENO, "exit\n", 6);
 			free(command);
 			exit(0);
 		}
