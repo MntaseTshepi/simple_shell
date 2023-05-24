@@ -25,11 +25,10 @@ char **tokenizePath()
 		tokens = strtok(NULL, delim);
 	}
 	num_token++;
-	PATH = malloc(sizeof(char *) * num_token);
+	PATH = malloc(sizeof(char *) * num_token + 1);
 	if (PATH == NULL)
 	{
 		perror("sh: memory allocation failed");
-		free(PATH);
 		exit(EXIT_FAILURE);
 	}
 	val_copy = _strdup(value);
@@ -40,16 +39,14 @@ char **tokenizePath()
 		if (PATH[i] == NULL)
 		{
 			perror("sh: memory allocation failed");
-			free(PATH[i]);
 			exit(EXIT_FAILURE);
 		}
 		_strcpy(PATH[i], tokens);
 		tokens = strtok(NULL, delim);
 	}
+	PATH[i] = NULL;
 	free(value_cpy);
-	value_cpy = NULL;
 	free(val_copy);
-	val_copy = NULL;
 	return (PATH);
 }
 /**

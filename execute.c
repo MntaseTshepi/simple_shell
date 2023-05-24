@@ -4,38 +4,62 @@
  * execute_external_command - executes binary files
  * @command: Command parameter
  * @argv: argv parameter
- * Return: Void
+ * Return: Void
+ *
  */
 
 void execute_external_command(char *command, char **argv)
 {
 	pid_t pid = fork();
 	int status;
-	char *full_path, *errorMessage = "Command not found\n";
-
-	full_path = getCommandPath(command);
-	if (full_path == NULL)
+	char *full_path;
+	char *errorMessage = "Error command.\n";
+	
+	if (strncmp(command, "/bin/", 5) == 0) 
 	{
-		write(STDERR_FILENO, errorMessage, _strlen(errorMessage));
-		return;
+		if (access(command, X_OK) != 0)
+		{
+			perror(command);
+			return;
+		}
 	}
-	if (access(full_path, X_OK) != 0)
+	else
 	{
-		perror(command);
-		free(full_path);
-		return;
+		full_path = getCommandPath(command);
+		if (full_path == NULL)
+		{
+			write(STDOUT_FILENO, errorMessage, strlen(errorMessage));
+			return;
+		}
+		if (access(full_path, X_OK) != 0)
+		{
+			perror(command);
+			free(full_path);
+			return;
+		}
 	}
-	if (pid  == -1)
+	if (pid == -1)
 	{
 		perror(command);
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
 	{
-		if (execve(full_path, argv, NULL) == -1)
+		if (strncmp(command, "/bin/", 5) == 0)
 		{
-			perror(command);
-			exit(EXIT_FAILURE);
+			if (execve(command, argv, NULL) == -1)
+			{
+				perror(command);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			if (execve(full_path, argv, NULL) == -1)
+			{
+				perror(command);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 	else
@@ -46,5 +70,8 @@ void execute_external_command(char *command, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
-	free(full_path);
+	if (strncmp(command, "/bin/", 5) != 0)
+	{
+		free(full_path);
+	}
 }

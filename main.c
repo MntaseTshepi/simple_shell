@@ -30,15 +30,19 @@ void free_argv(char **argv)
 
 int main(int ac, char **argv)
 {
+	bool pipe = false;
 	char *errorMessage = "Error parsing command.\n", *command = NULL;
 	size_t command_size = 0;
 	ssize_t num_chars = 0;
-	char *prompt = "$ ";
 	(void)ac;
-
-	while (1)
+	
+	while (1 && !pipe)
 	{
-		write(STDOUT_FILENO, prompt, strlen(prompt));
+		print_prompt();
+		if (isatty(STDIN_FILENO) == 0)
+		{
+			pipe = true;
+		}
 		num_chars = getline(&command, &command_size, stdin);
 		if (num_chars == -1)
 		{
