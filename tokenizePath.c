@@ -25,7 +25,7 @@ char **tokenizePath()
 		tokens = strtok(NULL, delim);
 	}
 	num_token++;
-	PATH = malloc(sizeof(char *) * num_token + 1);
+	PATH = malloc(sizeof(char *) * (num_token + 1));
 	if (PATH == NULL)
 	{
 		perror("sh: memory allocation failed");
