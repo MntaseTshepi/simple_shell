@@ -1,52 +1,66 @@
-#include "myshell.h"
+#include "shell.h"
 
-/**
- * main - main function
- * @ac: argument count parameter
- * @argv: argument vector parameter
- * Return: Always 0 (success)
- */
+/*main function*/
 
-int main(int ac, char **argv)
+void free_argv(char **argv)
 {
-	bool pipe;
-	int i = 0;
-	char *command = NULL;
-	size_t command_size = 0;
-	ssize_t num_chars;
-	(void)ac;
+    int i;
+    if (argv == NULL)
+        return;
 
-	pipe = false;
-	while (1 && !pipe)
-	{
-		print_prompt();
-		if (isatty(STDIN_FILENO) == 0)
-		{
-			pipe = true;
-		}
-		num_chars = getline(&command, &command_size, stdin);
-		if (num_chars == -1)
-		{
-			if (feof(stdin))
-			{
-				write(1, "\n", 1);
-			}
-			exit(0);
-		}
-		argv = parse_command(command, num_chars);
-		execute_command(argv);
-		if (argv != NULL)
-		{
-			for (i = 0; argv[i] != NULL; i++)
-			{
-				free(argv[i]);
-				argv[i] = NULL;
-			}
-			free(argv);
-			argv = NULL;
-		}
-	}
-	free(command);
-	command = NULL;
-	return (0);
+    for ( i = 0; argv[i] != NULL; i++) {
+        free(argv[i]);
+        argv[i] = NULL;
+    }
+
+    free(argv);
+    argv = NULL;
+}
+
+int main(int ac, char **argv) {
+     char *errorMessage = "Error parsing command.\n";
+    char *command = NULL;
+    size_t command_size = 0;
+    ssize_t num_chars = 0;
+    const char *prompt = "$ ";
+    (void)ac;
+   
+
+    while (1) {
+        write(STDOUT_FILENO, prompt, strlen(prompt));
+        num_chars = getline(&command, &command_size, stdin);
+        if (num_chars == -1) {
+            if (feof(stdin)) {
+                write(STDOUT_FILENO, "\n", 1);
+            }
+            free(command);
+            exit(0);
+        } else if (num_chars == 0) {
+            free(command);
+            command = NULL;
+            continue;
+        }
+
+        if (command[num_chars - 1] == '\n') {
+            command[num_chars - 1] = '\0';
+            num_chars--;
+        }
+
+         argv = parse_command(command, num_chars);
+        if (argv == NULL) {
+           
+    write(STDERR_FILENO, errorMessage, _strlen(errorMessage));
+            free(command);
+            command = NULL;
+            continue;
+        }
+
+        execute_external_command(argv[0], argv);
+
+        free_argv(argv);
+        free(command);
+        command = NULL;
+    }
+
+    return 0;
 }
