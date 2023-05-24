@@ -46,6 +46,7 @@ char **parse_command(char *command, ssize_t num_chars)
 				argv[j] = NULL;
 			}
 			free(argv);
+			free(command_cpy);
 			perror("bsh: memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
