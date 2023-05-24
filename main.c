@@ -14,10 +14,9 @@ int main(int ac, char **argv)
 	char *command = NULL;
 	size_t command_size = 0;
 	ssize_t num_chars;
-
 	(void)ac;
-	pipe = false;
 
+	pipe = false;
 	while (1 && !pipe)
 	{
 		print_prompt();
@@ -28,7 +27,10 @@ int main(int ac, char **argv)
 		num_chars = getline(&command, &command_size, stdin);
 		if (num_chars == -1)
 		{
-			free(command);
+			if (feof(stdin))
+			{
+				write(1, "\n", 1);
+			}
 			exit(0);
 		}
 		argv = parse_command(command, num_chars);
