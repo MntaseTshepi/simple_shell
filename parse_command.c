@@ -34,7 +34,6 @@ char **parse_command(char *command, ssize_t num_chars)
 		exit(EXIT_FAILURE);
 	}
 	tokens = strtok(command_cpy, delim);
-	argv[0] = _strdup(command);
 	for (i = 0; tokens != NULL; i++)
 	{
 		argv[i] = malloc(sizeof(char) * _strlen(tokens) + 1);
