@@ -1,14 +1,14 @@
-##SIMPLE SHELL PROJECT
+#SIMPLE SHELL PROJECT
 
-#DESCRIPTION:
+##DESCRIPTION:
 
 	This is a project on creating a simple bash shell that operates like the UNIX/LINUX bash shell.
 
-#COMPILATION:
+##COMPILATION:
 
 	gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
-#List of allowed functions and system calls
+##List of allowed functions and system calls
 
     access (man 2 access)
     chdir (man 2 chdir)
@@ -42,12 +42,12 @@
     wait4 (man 2 wait4)
     write (man 2 write)
 
-#TASKS
+##TASKS
 
 	Write a user-defined UNIX command line interpreter.
-##Requirements
+#Requirements
 
-#General
+##General
 
     Allowed editors: vi, vim, emacs
     All your files will be compiled on Ubuntu 20.04 LTS using gcc, using the options -Wall -Werror -Wextra -pedantic -std=gnu89
@@ -63,7 +63,7 @@
 
 
 
-#AUTHORS
+##AUTHORS
 
-Tshepiso Moilwe
+Tshepiso Moilwe, 
 Siduduzile Snenhlanhla Mdima	
