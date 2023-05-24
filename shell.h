@@ -12,6 +12,7 @@
 #include <stdbool.h>
 
 int main(int ac, char **argv);
+void print_prompt(void);
 void free_argv(char **argv);
 char **parse_command(char *command, ssize_t num_chars);
 char **tokenizePath();

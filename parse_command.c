@@ -9,14 +9,13 @@
 char **parse_command(char *command, ssize_t num_chars)
 {
 	char *command_cpy = NULL, **argv, *tokens;
-	int i = 0, num_token = 0;
+	int i = 0, num_token = 0, j;
 	const char *delim = " \n";
 
-	command_cpy = malloc(num_chars);
+	command_cpy = malloc(num_chars + 1);
 	if (command_cpy == NULL)
 	{
 		perror("sh: memory allocation failed");
-		free(command_cpy);
 		exit(EXIT_FAILURE);
 	}
 	_strcpy(command_cpy, command);
@@ -31,16 +30,22 @@ char **parse_command(char *command, ssize_t num_chars)
 	if (argv == NULL)
 	{
 		perror("tsh: memory allocation failed");
-		free(argv);
+		free(command_cpy);
 		exit(EXIT_FAILURE);
 	}
 	tokens = strtok(command_cpy, delim);
+	argv[0] = _strdup(command);
 	for (i = 0; tokens != NULL; i++)
 	{
 		argv[i] = malloc(sizeof(char) * _strlen(tokens) + 1);
 		if (argv[i] == NULL)
 		{
-			free(argv[i]);
+			for (j = 0; j < i; j++)
+			{
+				free(argv[j]);
+				argv[j] = NULL;
+			}
+			free(argv);
 			perror("bsh: memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
