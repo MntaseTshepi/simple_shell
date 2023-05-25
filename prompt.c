@@ -9,10 +9,10 @@
 
 void print_prompt(void)
 {
-    const char *prompt = "$ ";
-
-    if (isatty(STDIN_FILENO))
-    {
-        write(STDOUT_FILENO, prompt, strlen(prompt));
-    }
+	
+	if (isatty(STDIN_FILENO))
+	{
+		const char *prompt = "$ ";
+		write(STDOUT_FILENO, prompt, strlen(prompt));
+	}
 }

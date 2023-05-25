@@ -28,32 +28,47 @@ void free_argv(char **argv)
  * Return: alway 0 on Success
  */
 
-int main(int ac, char **argv)
+int main(int argc, char **argv)
 {
 	bool pipe = false;
 	char *errorMessage = "Error parsing command.\n", *command = NULL;
 	size_t command_size = 0;
 	ssize_t num_chars = 0;
-	(void)ac;
-	
+	FILE *file = NULL;
+
+	if (argc > 1)
+	{
+		file = fopen(argv[1], "r");
+		if (file == NULL)
+		{
+			perror("Error opening file");
+			exit(EXIT_FAILURE);
+		}
+	}
 	while (1 && !pipe)
 	{
 		print_prompt();
-		if (isatty(STDIN_FILENO) == 0)
+
+		if (file)
 		{
-			pipe = true;
-		}
-		num_chars = getline(&command, &command_size, stdin);
-		if (num_chars == -1)
-		{
-			if (feof(stdin))
+			num_chars = getline(&command, &command_size, file);
+			if (num_chars == -1)
 			{
-				write(STDOUT_FILENO, "\n", 1);
+				free(command);
+				exit(0);
 			}
-			free(command);
-			exit(0);
 		}
-		else if (num_chars == 0)
+		else
+		{
+			num_chars = getline(&command, &command_size,stdin);
+			if (num_chars == -1)
+			{
+				free(command);
+				exit(0);
+			}
+
+		}
+		if (num_chars == 0)
 		{
 			free(command);
 			command = NULL;
@@ -76,6 +91,10 @@ int main(int ac, char **argv)
 		free_argv(argv);
 		free(command);
 		command = NULL;
+	}
+	if (file)
+	{
+		fclose(file);
 	}
 	return (0);
 }
