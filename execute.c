@@ -138,7 +138,7 @@ void execute_external_command(char *command, char **argv)
 	pid_t pid = fork();
 	int status;
 	char *full_path;
-	/*char *errorMessage = "Error command.\n";*/
+	char *errorMessage = "Error command.\n";
 	
 	if (strncmp(command, "/bin/", 5) == 0) 
 	{
@@ -153,8 +153,7 @@ void execute_external_command(char *command, char **argv)
 		full_path = getCommandPath(command);
 		if (full_path == NULL)
 		{
-			/*write(STDOUT_FILENO, errorMessage, strlen(errorMessage));*/
-			perror(command);
+			write(STDOUT_FILENO, errorMessage, strlen(errorMessage));
 			return;
 		}
 		if (access(full_path, X_OK) != 0)
@@ -199,5 +198,9 @@ void execute_external_command(char *command, char **argv)
 	if (strncmp(command, "/bin/", 5) != 0)
 	{
 		free(full_path);
+	}
+       	if (strcmp(command, "exit") == 0)
+	{
+		exit(status);
 	}
 }
