@@ -85,12 +85,10 @@ void execute_builtin_command(char *command, char **argv)
 	{
 		if (argv[1] != NULL)
 		{
-			_printexit(status, argv);
+			status = atoi(argv[1]);
+		
 		}
-		else
-		{
-			exit(status);
-		}
+		exit(status);
 	}
 	else if (strcmp (command, "echo") == 0)
 	{
@@ -118,9 +116,6 @@ void execute_builtin_command(char *command, char **argv)
 		cd_builtin(argv);
 	else
 	{
-		write(STDERR_FILENO, "Unrecognized command:", 22);
-		write(STDERR_FILENO, command, strlen(command));
-		write(STDERR_FILENO, "\n", 1);
 		exit(EXIT_FAILURE);
 	}
 }
