@@ -199,8 +199,4 @@ void execute_external_command(char *command, char **argv)
 	{
 		free(full_path);
 	}
-       	if (strcmp(command, "exit") == 0)
-	{
-		exit(status);
-	}
 }

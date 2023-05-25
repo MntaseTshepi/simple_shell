@@ -79,6 +79,11 @@ int main(int argc, char **argv)
 			command[num_chars - 1] = '\0';
 			num_chars--;
 		}
+		if (strcmp(command, "exit") == 0)
+		{
+			free(command);
+			break;
+		}
 		argv = parse_command(command, num_chars);
 		if (argv == NULL)
 		{
