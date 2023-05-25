@@ -34,6 +34,8 @@ int main(int argc, char **argv)
 	char *errorMessage = "Error parsing command.\n", *command = NULL;
 	size_t command_size = 0;
 	ssize_t num_chars = 0;
+	int exit_code;
+	char *exit_args;
 	FILE *file = NULL;
 
 	if (argc > 1)
@@ -79,10 +81,21 @@ int main(int argc, char **argv)
 			command[num_chars - 1] = '\0';
 			num_chars--;
 		}
-		if (strcmp(command, "exit") == 0)
+		if (strncmp(command, "exit", 4) == 0)
 		{
+			exit_args = strtok(command, " ");
+			if (exit_args != NULL)
+			{
+				exit_args = strtok(NULL, " ");
+				if (exit_args != NULL)
+				{
+					exit_code = atoi(exit_args);
+					free(command);
+					exit(exit_code);
+				}
+			}
 			free(command);
-			break;
+			exit(0);
 		}
 		argv = parse_command(command, num_chars);
 		if (argv == NULL)
