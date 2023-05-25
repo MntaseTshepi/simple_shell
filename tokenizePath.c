@@ -7,12 +7,17 @@
 
 char **tokenizePath()
 {
-	char *variable = "PATH", *value = getenv(variable), *tokens;
+	char *variable = "PATH";
+	char *value = getenv(variable);
+	char *tokens = NULL;
 	const char *delim = ":";
-	int num_token = 0, i = 0;
-	char *value_cpy = NULL, *val_copy = NULL, **PATH;
+	int num_token = 0; 
+	int i = 0;
+	char *value_cpy = NULL;
+	char *val_copy = NULL;
+	char **PATH = NULL;
 
-	value_cpy = _strdup(value);
+	value_cpy = strdup(value);
 	if (value_cpy == NULL)
 	{
 		perror("sh: memory allocation failed");
@@ -31,17 +36,17 @@ char **tokenizePath()
 		perror("sh: memory allocation failed");
 		exit(EXIT_FAILURE);
 	}
-	val_copy = _strdup(value);
+	val_copy = strdup(value);
 	tokens = strtok(val_copy, delim);
 	for (i = 0; tokens != NULL; i++)
 	{
-		PATH[i] = malloc(sizeof(char) * (_strlen(tokens) + 1));
+		PATH[i] = malloc(sizeof(char) * (strlen(tokens) + 1));
 		if (PATH[i] == NULL)
 		{
 			perror("sh: memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
-		_strcpy(PATH[i], tokens);
+		strcpy(PATH[i], tokens);
 		tokens = strtok(NULL, delim);
 	}
 	PATH[i] = NULL;
@@ -58,7 +63,7 @@ char **tokenizePath()
 char *findCommandPath(char **pathTokens, char *command)
 {
 	char *commandPath = NULL;
-	size_t commandLen = _strlen(command);
+	size_t commandLen = strlen(command);
 	size_t pathLen;
 	size_t fullPathLen;
 	int i;
@@ -66,7 +71,7 @@ char *findCommandPath(char **pathTokens, char *command)
 
 	for (i = 0; pathTokens[i] != NULL; i++)
 	{
-		pathLen = _strlen(pathTokens[i]);
+		pathLen = strlen(pathTokens[i]);
 		fullPathLen = pathLen + commandLen + 2;
 		fullPath = malloc(fullPathLen);
 		if (fullPath == NULL)
@@ -74,9 +79,9 @@ char *findCommandPath(char **pathTokens, char *command)
 			perror("Memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
-		_strcpy(fullPath, pathTokens[i]);
-		_strcat(fullPath, "/");
-		_strcat(fullPath, command);
+		strcpy(fullPath, pathTokens[i]);
+		strcat(fullPath, "/");
+		strcat(fullPath, command);
 		if (access(fullPath, X_OK) == 0)
 		{
 			commandPath = fullPath;
