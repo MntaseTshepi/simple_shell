@@ -29,6 +29,11 @@ char *_strcat(char *dest, const char *src);
 char *_strcpy(char *dest, const char *src);
 int _strlen(const char *s);
 int _strncmp(const char *s1, const char *s2, size_t n);
+void execute_command(char **argv);
+int is_builtin(char *command);
+void execute_builtin_command(char *command, char **argv);
+void _printenviron(void);
+void _printexit(int status,char **argv);
 
 
 #endif

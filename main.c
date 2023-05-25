@@ -72,7 +72,7 @@ int main(int ac, char **argv)
 			command = NULL;
 			continue;
 		}
-		execute_external_command(argv[0], argv);
+		execute_command(argv);
 		free_argv(argv);
 		free(command);
 		command = NULL;

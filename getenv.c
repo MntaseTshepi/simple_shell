@@ -23,3 +23,16 @@ char *_getenv(const char *name)
 
 	return (NULL);
 }
+
+/**
+ * _printexit - prints exit with status
+ * @status: parameter
+ * @argv: argv parameter
+ * Return: Void
+ */
+
+void _printexit(int status, char **argv)
+{
+	status = atoi(argv[1]);
+	exit(status);
+}
