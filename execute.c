@@ -34,7 +34,8 @@ void execute_command(char **argv)
 
 int is_builtin(char *command)
 {
-	const char *builtins[] = {"printenv", "env", "exit", "echo"};
+	const char *builtins[] = {"printenv", "env", "exit", "echo", "cd",
+	"unsetenv", "setenv"};
 	size_t num_builtins, i;
 	
 	num_builtins = sizeof(builtins) / sizeof(builtins[0]);
@@ -101,6 +102,12 @@ void execute_builtin_command(char *command, char **argv)
 		}
 		write(STDOUT_FILENO, "\n", 1);
 	}
+	if (strcmp(command, "setenv") == 0)
+		setenv_function(argv);
+	if (strcmp(command, "unsetenv") == 0)
+		unsetenv_function(argv);
+	if (strcmp(command, "cd") == 0)
+		cd_builtin(argv);
 }
 
 /**

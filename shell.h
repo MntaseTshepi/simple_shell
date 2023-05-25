@@ -34,6 +34,9 @@ int is_builtin(char *command);
 void execute_builtin_command(char *command, char **argv);
 void _printenviron(void);
 void _printexit(int status,char **argv);
+void cd_builtin(char **argv);
+void unsetenv_function(char **argv);
+void setenv_function(char **argv);
 
 
 #endif
