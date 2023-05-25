@@ -81,7 +81,7 @@ void execute_builtin_command(char *command, char **argv)
 	{
 		_printenviron();
 	}
-	if (strcmp (command, "exit") == 0)
+	else if (strcmp (command, "exit") == 0)
 	{
 		if (argv[1] != NULL)
 		{
@@ -89,25 +89,40 @@ void execute_builtin_command(char *command, char **argv)
 		}
 		else
 		{
-			exit(0);
+			exit(status);
 		}
 	}
-	if (strcmp (command, "echo") == 0)
+	else if (strcmp (command, "echo") == 0)
 	{
 		for (i = 1; argv[i] != NULL; i++)
 		{
 			len = strlen(argv[i]);
-			write(STDOUT_FILENO, argv[i], len);
-			write(STDOUT_FILENO, " ", 1);
+			if(write(STDOUT_FILENO, argv[i], len) == -1 || 
+					write(STDOUT_FILENO, " ", 1) == - 1)
+			{
+				write(STDERR_FILENO, "Error writing to stdout\n", 24);
+				exit(EXIT_FAILURE);
+			}
 		}
-		write(STDOUT_FILENO, "\n", 1);
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
+		{
+			write(STDERR_FILENO, "Error writing to stdout\n", 24);
+			exit(EXIT_FAILURE);
+		}
 	}
-	if (strcmp(command, "setenv") == 0)
+	else if (strcmp(command, "setenv") == 0)
 		setenv_function(argv);
-	if (strcmp(command, "unsetenv") == 0)
+	else if (strcmp(command, "unsetenv") == 0)
 		unsetenv_function(argv);
-	if (strcmp(command, "cd") == 0)
+	else if (strcmp(command, "cd") == 0)
 		cd_builtin(argv);
+	else
+	{
+		write(STDERR_FILENO, "Unrecognized command:", 22);
+		write(STDERR_FILENO, command, strlen(command));
+		write(STDERR_FILENO, "\n", 1);
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
@@ -123,7 +138,7 @@ void execute_external_command(char *command, char **argv)
 	pid_t pid = fork();
 	int status;
 	char *full_path;
-	char *errorMessage = "Error command.\n";
+	/*char *errorMessage = "Error command.\n";*/
 	
 	if (strncmp(command, "/bin/", 5) == 0) 
 	{
@@ -138,7 +153,8 @@ void execute_external_command(char *command, char **argv)
 		full_path = getCommandPath(command);
 		if (full_path == NULL)
 		{
-			write(STDOUT_FILENO, errorMessage, strlen(errorMessage));
+			/*write(STDOUT_FILENO, errorMessage, strlen(errorMessage));*/
+			perror(command);
 			return;
 		}
 		if (access(full_path, X_OK) != 0)
