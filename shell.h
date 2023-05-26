@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 int main(int ac, char **argv);
 void print_prompt(void);
@@ -37,7 +38,7 @@ void _printexit(int status,char **argv);
 void cd_builtin(char **argv);
 void unsetenv_function(char **argv);
 void setenv_function(char **argv);
-
+bool is_valid_number(const char *str);
 
 #endif
 
