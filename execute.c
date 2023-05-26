@@ -9,7 +9,7 @@
 void execute_command(char **argv)
 {
 	char *command;
-	
+
 	command = argv[0];
 	if (command == NULL)
 	{
@@ -34,19 +34,19 @@ void execute_command(char **argv)
 
 int is_builtin(char *command)
 {
-	const char *builtins[] = {"printenv", "env", "exit", "echo", "cd",
+	const char *builtins[] = {"printenv", "env", "echo", "cd",
 	"unsetenv", "setenv"};
 	size_t num_builtins, i;
-	
+
 	num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 	for (i = 0; i < num_builtins; i++)
 	{
-		if(strcmp(command, builtins[i]) == 0)
+		if (strcmp(command, builtins[i]) == 0)
 		{
-			return 1;
+			return (1);
 		}
 	}
-	return 0;
+	return (0);
 }
 
 /**
@@ -74,29 +74,20 @@ void _printenviron(void)
 
 void execute_builtin_command(char *command, char **argv)
 {
-	int i, status = EXIT_SUCCESS;
+	int i;
 	size_t len;
-	
+
 	if (strcmp(command, "env") == 0 || strcmp(command, "printenv") == 0)
 	{
 		_printenviron();
 	}
-	else if (strcmp (command, "exit") == 0)
-	{
-		if (argv[1] != NULL)
-		{
-			status = atoi(argv[1]);
-		
-		}
-		exit(status);
-	}
-	else if (strcmp (command, "echo") == 0)
+	else if (strcmp(command, "echo") == 0)
 	{
 		for (i = 1; argv[i] != NULL; i++)
 		{
 			len = strlen(argv[i]);
-			if(write(STDOUT_FILENO, argv[i], len) == -1 || 
-					write(STDOUT_FILENO, " ", 1) == - 1)
+			if (write(STDOUT_FILENO, argv[i], len) == -1 ||
+					write(STDOUT_FILENO, " ", 1) == -1)
 			{
 				write(STDERR_FILENO, "Error writing to stdout\n", 24);
 				exit(EXIT_FAILURE);
@@ -134,8 +125,8 @@ void execute_external_command(char *command, char **argv)
 	int status;
 	char *full_path;
 	char *errorMessage = "Error command.\n";
-	
-	if (strncmp(command, "/bin/", 5) == 0) 
+
+	if (strncmp(command, "/bin/", 5) == 0)
 	{
 		if (access(command, X_OK) != 0)
 		{

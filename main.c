@@ -11,7 +11,7 @@
 void free_argv(char **argv)
 {
 	int i;
-	
+
 	if (argv == NULL)
 		return;
 	for (i = 0; argv[i] != NULL; i++)
@@ -31,14 +31,14 @@ void free_argv(char **argv)
 bool is_valid_number(const char *str)
 {
 	if (str == NULL || *str == '\0')
-		return false;
+		return (false);
 	while (*str)
 	{
 		if (!isdigit(*str))
-			return false;
+			return (false);
 		str++;
 	}
-	return(true);
+	return (true);
 }
 /**
  * main - main function
@@ -57,6 +57,7 @@ int main(int argc, char **argv)
 	int exit_code;
 	char *exit_args;
 	FILE *file = NULL;
+
 	if (argc > 1)
 	{
 		file = fopen(argv[1], "r");
@@ -123,7 +124,7 @@ int main(int argc, char **argv)
 					free(command);
 					exit(exit_code);
 				}
-				else 
+				else
 				{
 					write(2, "./hsh: 1: exit: Illegal number: ", 32);
 					write(2, exit_args, strlen(exit_args));
