@@ -11,7 +11,7 @@ char **tokenizePath()
 	char *value = getenv(variable);
 	char *tokens = NULL;
 	const char *delim = ":";
-	int num_token = 0;
+	int num_token = 0; 
 	int i = 0;
 	char *value_cpy = NULL;
 	char *val_copy = NULL;
