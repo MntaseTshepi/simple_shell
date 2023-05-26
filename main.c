@@ -23,7 +23,7 @@ void free_argv(char **argv)
 
 /**
  * main - main function
- * @ac: arguement count parameter
+ * @argc: arguement count parameter
  * @argv: Arguement vector
  * Return: alway 0 on Success
  */
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-			num_chars = getline(&command, &command_size,stdin);
+			num_chars = getline(&command, &command_size, stdin);
 			if (num_chars == -1)
 			{
 				free(command);

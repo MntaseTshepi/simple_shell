@@ -10,10 +10,10 @@
 int _strlen(const char *s)
 {
 	int len = 0;
-	
+
 	if (s == NULL)
-		return 0;
-	
+		return (0);
+
 	while (s[len] != '\0')
 		len++;
 	return (len);
@@ -29,16 +29,16 @@ int _strlen(const char *s)
 char *_strcpy(char *dest, const char *src)
 {
 	int len = 0;
-	
+
 	if (src == NULL || dest == NULL)
-		return NULL;
+		return (NULL);
 	while (src[len] != '\0')
 	{
 		dest[len] = src[len];
 		len++;
 	}
 	dest[len] = '\0';
-	return dest;
+	return (dest);
 }
 
 /**

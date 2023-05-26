@@ -18,7 +18,7 @@ char **parse_command(char *command, ssize_t num_chars)
 		perror("sh: memory allocation failed");
 		exit(EXIT_FAILURE);
 	}
-	strcpy(command_cpy, command);;
+	strcpy(command_cpy, command);
 	for (i = 0; i < num_chars; i++)
 	{
 		if (command_cpy[i] == '#')
