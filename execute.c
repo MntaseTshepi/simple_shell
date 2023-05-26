@@ -133,71 +133,70 @@ void execute_builtin_command(char *command, char **argv)
  *
  */
 
-void execute_external_command(char *command, char **argv)
+void execute_external_command(char* command, char** argv)
 {
 	pid_t pid = fork();
 	int status;
-	char *full_path;
-	
-	
-	if (strncmp(command, "/bin/", 5) == 0) 
-	{
-		if (access(command, X_OK || !command ) != 0)
-		{
-			perror(command);
-			return;
-		}
-	}
-	else
-	{
-		full_path = getCommandPath(command);
-		if (full_path == NULL)
-                {
+	char which_command[512];
+	char result[256];
+	char* result_ptr;
+	char* path = NULL;
+	FILE* which_output;
+	size_t result_length;
 
-			perror(command);
-			return;
-		}
-		if (access(full_path, X_OK) != 0)
-		{
-			perror(command);
-			free(full_path);
-			return;
-		}
-	}
 	if (pid == -1)
 	{
-		perror(command);
+		perror("fork");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
 	{
-		if (strncmp(command, "/bin/", 5) == 0)
+		strcpy(which_command, "which ");
+		strcat(which_command, command);
+		strcat(which_command, " 2>/dev/null");
+
+		which_output = popen(which_command, "r");
+		if (which_output == NULL)
 		{
-			if (execve(command, argv, NULL) == -1)
-			{
-				perror(command);
-				exit(EXIT_FAILURE);
-			}
+			perror("popen");
+			exit(EXIT_FAILURE);
 		}
-		else
+		result_ptr = fgets(result, sizeof(result), which_output);
+		pclose(which_output);
+		if (result_ptr == NULL)
 		{
-			if (execve(full_path, argv, NULL) == -1)
-			{
-				perror(command);
-				exit(EXIT_FAILURE);
-			}
+			write(STDERR_FILENO, "Command not found: ", 19);
+			write(STDERR_FILENO, command, strlen(command));
+			write(STDERR_FILENO, "\n", 1);
+			exit(EXIT_FAILURE);
 		}
+		result_length = strlen(result);
+		if (result_length > 0 && result[result_length - 1] == '\n')
+		{
+			result[result_length - 1] = '\0';
+		}
+		path = malloc(strlen(result) + 1);
+		if (path == NULL)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		strcpy(path, result);
+		argv[0] = path;
+		execve(path, argv, NULL);
+		perror("execve");
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		if (waitpid(pid, &status, 0) == -1)
 		{
-			perror(command);
+			perror("waitpid");
 			exit(EXIT_FAILURE);
 		}
-	}
-	if (strncmp(command, "/bin/", 5) != 0)
-	{
-		free(full_path);
+		if (path != NULL)
+		{
+			free(path);
+		}
 	}
 }
