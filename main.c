@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 		argv = parse_command(command, num_chars);
 		if (argv == NULL)
 		{
-			write(STDERR_FILENO, errorMessage, _strlen(errorMessage));
+			write(STDERR_FILENO, errorMessage, strlen(errorMessage));
 			free(command);
 			command = NULL;
 			continue;
