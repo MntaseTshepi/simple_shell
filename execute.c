@@ -9,7 +9,7 @@
 void execute_command(char **argv)
 {
 	char *command;
-	
+
 	command = argv[0];
 	if (command == NULL)
 	{
@@ -34,10 +34,9 @@ void execute_command(char **argv)
 
 int is_builtin(char *command)
 {
-	const char *builtins[] = {"printenv", "env", "exit", "echo", "cd",
-	"unsetenv", "setenv"};
+	const char *builtins[] = {"printenv", "env", "exit", "echo"};
 	size_t num_builtins, i;
-	
+
 	num_builtins = sizeof(builtins) / sizeof(builtins[0]);
 	for (i = 0; i < num_builtins; i++)
 	{
@@ -76,47 +75,31 @@ void execute_builtin_command(char *command, char **argv)
 {
 	int i, status = EXIT_SUCCESS;
 	size_t len;
-	
+
 	if (strcmp(command, "env") == 0 || strcmp(command, "printenv") == 0)
 	{
 		_printenviron();
 	}
-	else if (strcmp (command, "exit") == 0)
+	if (strcmp (command, "exit") == 0)
 	{
 		if (argv[1] != NULL)
 		{
-			status = atoi(argv[1]);
-		
+			_printexit(status, argv);
 		}
-		exit(status);
+		else
+		{
+			exit(0);
+		}
 	}
-	else if (strcmp (command, "echo") == 0)
+	if (strcmp (command, "echo") == 0)
 	{
 		for (i = 1; argv[i] != NULL; i++)
 		{
 			len = strlen(argv[i]);
-			if(write(STDOUT_FILENO, argv[i], len) == -1 || 
-					write(STDOUT_FILENO, " ", 1) == - 1)
-			{
-				write(STDERR_FILENO, "Error writing to stdout\n", 24);
-				exit(EXIT_FAILURE);
-			}
+			write(STDOUT_FILENO, argv[i], len);
+			write(STDOUT_FILENO, " ", 1);
 		}
-		if (write(STDOUT_FILENO, "\n", 1) == -1)
-		{
-			write(STDERR_FILENO, "Error writing to stdout\n", 24);
-			exit(EXIT_FAILURE);
-		}
-	}
-	else if (strcmp(command, "setenv") == 0)
-		setenv_function(argv);
-	else if (strcmp(command, "unsetenv") == 0)
-		unsetenv_function(argv);
-	else if (strcmp(command, "cd") == 0)
-		cd_builtin(argv);
-	else
-	{
-		exit(EXIT_FAILURE);
+		write(STDOUT_FILENO, "\n", 1);
 	}
 }
 
@@ -124,27 +107,25 @@ void execute_builtin_command(char *command, char **argv)
  * execute_external_command - executes binary files
  * @command: Command parameter
  * @argv: argv parameter
- * Return: Void
+ * Return: Void
  *
  */
-
-
 void execute_external_command(char *command, char **argv)
 {
-	pid_t pid;
+	pid_t pid = fork();
 	int status;
 	char *full_path;
 	char *errorMessage = "Error command.\n";
-
-	if (strncmp(command, "/bin/", 5) == 0)
+	
+	if (strncmp(command, "/bin/", 5) == 0) 
 	{
 		if (access(command, X_OK) != 0)
 		{
 			perror(command);
 			return;
 		}
-	} 
-	else 
+	}
+	else
 	{
 		full_path = getCommandPath(command);
 		if (full_path == NULL)
@@ -152,14 +133,14 @@ void execute_external_command(char *command, char **argv)
 			write(STDOUT_FILENO, errorMessage, strlen(errorMessage));
 			return;
 		}
-        if (access(full_path, X_OK) != 0)
+		if (access(full_path, X_OK) != 0)
 		{
 			perror(command);
 			free(full_path);
 			return;
-			}
-    }
-	if ((pid = fork()) == -1)
+		}
+	}
+	if (pid == -1)
 	{
 		perror(command);
 		exit(EXIT_FAILURE);
@@ -182,7 +163,7 @@ void execute_external_command(char *command, char **argv)
 				exit(EXIT_FAILURE);
 			}
 		}
-    }
+	}
 	else
 	{
 		if (waitpid(pid, &status, 0) == -1)
@@ -191,7 +172,7 @@ void execute_external_command(char *command, char **argv)
 			exit(EXIT_FAILURE);
 		}
 	}
-    if (strncmp(command, "/bin/", 5) != 0)
+	if (strncmp(command, "/bin/", 5) != 0)
 	{
 		free(full_path);
 	}
