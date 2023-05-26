@@ -137,9 +137,8 @@ void execute_external_command(char *command, char **argv)
 {
 	pid_t pid = fork();
 	int status;
-	char *full_path;
-	/*char *errorMessage = "Error command.\n";*/
-	
+	char *full_path = NULL;
+
 	if (strncmp(command, "/bin/", 5) == 0) 
 	{
 		if (access(command, X_OK) != 0)
@@ -148,14 +147,23 @@ void execute_external_command(char *command, char **argv)
 			return;
 		}
 	}
-	else
+
+	if (pid == -1)
 	{
-		full_path = getCommandPath(command);
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		char *full_path = getCommandPath(command);
 		if (full_path == NULL)
 		{
-			/*write(STDOUT_FILENO, errorMessage, strlen(errorMessage));*/
-			perror(command);
-			return;
+			
+			write(STDERR_FILENO, "Command not found: ", 19);
+			write(STDERR_FILENO, command, strlen(command));
+			write(STDERR_FILENO, "\n", 1);
+			free(command);
+			exit(EXIT_FAILURE);
 		}
 		if (access(full_path, X_OK) != 0)
 		{
@@ -163,14 +171,6 @@ void execute_external_command(char *command, char **argv)
 			free(full_path);
 			return;
 		}
-	}
-	if (pid == -1)
-	{
-		perror(command);
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
 		if (strncmp(command, "/bin/", 5) == 0)
 		{
 			if (execve(command, argv, NULL) == -1)
@@ -187,12 +187,13 @@ void execute_external_command(char *command, char **argv)
 				exit(EXIT_FAILURE);
 			}
 		}
+
 	}
 	else
 	{
 		if (waitpid(pid, &status, 0) == -1)
 		{
-			perror(command);
+			perror("waitpid");
 			exit(EXIT_FAILURE);
 		}
 	}
