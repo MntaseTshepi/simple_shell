@@ -20,6 +20,24 @@ void free_argv(char **argv)
 	free(argv);
 	argv = NULL;
 }
+/**
+ * is_valid_number - checks if number is a positive int
+ * @str: string parameter
+ * Return: bool variable of true and
+*/
+
+bool is_valid_number(const char *str)
+{
+	if (str == NULL || *str == '\0')
+		return (false);
+	while (*str)
+	{
+		if (!isdigit(*str))
+			return (false);
+		str++;
+	}
+	return (true);
+}
 
 /**
  * main - main function
@@ -35,6 +53,8 @@ int main(int argc, char **argv)
 	size_t command_size = 0;
 	ssize_t num_chars = 0;
 	FILE *file = NULL;
+	int exit_code;
+	char *exit_args;
 
 	if (argc > 1)
 	{
@@ -78,6 +98,38 @@ int main(int argc, char **argv)
 		{
 			command[num_chars - 1] = '\0';
 			num_chars--;
+		}
+		if (strncmp(command, "exit", 4) == 0)
+		{
+			exit_args = strtok(command, " ");
+			if (exit_args != NULL)
+			{
+				exit_args = strtok(NULL, " ");
+				if (exit_args == NULL)
+				{
+					free(command);
+					exit(0);
+				}
+				else if (is_valid_number(exit_args))
+				{
+					exit_code = atoi(exit_args);
+					free(command);
+					exit(exit_code);
+				}
+				else
+				{
+					write(2, "./hsh: 1: exit: Illegal number: ", 32);
+					write(2, exit_args, strlen(exit_args));
+					write(2, "\n", 1);
+					free(command);
+					exit(2);
+				}
+			}
+			else
+			{
+				free(command);
+				exit(0);
+			}
 		}
 		argv = parse_command(command, num_chars);
 		if (argv == NULL)
